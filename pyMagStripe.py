@@ -130,32 +130,19 @@ class pyMagStripe():
             char = self.serial.read(1)
             prev = char
             string = ""
-            attempts = 100
             while (ord(prev) != ESCAPE or ord(char) < 0x30 or ord(char) > 0x3F):
                 string += char
                 prev = char
                 char = self.serial.read(1)
-                attempts -= 1
             self.serial.write(chr(ESCAPE) + chr(RESET))
 
-            track1pos = string.find( chr(0x1) )
-            track2pos = string.find (chr (0x2) )
-            track3pos = string.find (chr (0x3) )
-            track1 = string[track1pos:track2pos]
-            track2 = string[track2pos:track3pos]
-            track3 = string[track3pos:-1]
-            if track1.find( chr(WRITE_END)) == -1:
-                track1 = ""
-            else:
-                track1 = track1[2:track2.find(chr(WRITE_END))]
-            if track2.find( chr(WRITE_END)) == -1:
-                track2 = ""
-            else:
-                track2 = track2[2:track2.find(chr(WRITE_END))]
-            if track3.find( chr(WRITE_END)+chr(WRITE_END)) == -1:
-                track3 = ""
-            else:
-                track3 = track3[2:track3.find(chr(WRITE_END))]
+            track1pos = string.find( chr(ESCAPE) + chr(0x1) )
+            track2pos = string.find (chr(ESCAPE) + chr (0x2) )
+            track3pos = string.find (chr(ESCAPE) + chr (0x3) )
+            endpos = string.find("\x3f\x1c")
+            track1 = string[track1pos+2:track2pos]
+            track2 = string[track2pos+2:track3pos]
+            track3 = string[track3pos+2:endpos]
             return track1,track2,track3
 
         except Exception as e:
