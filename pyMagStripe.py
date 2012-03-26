@@ -18,7 +18,6 @@
 ##
 ## Outline:
 ## pyMagStripe.py -- provides the methods to interact with the serial magnetic card reader/writer
-## pyMagStripGui.py  -- provides a wxPython front end
 
 
 import serial, datetime
